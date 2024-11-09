@@ -108,11 +108,7 @@ function inferQuality(box){
 }
 
 function changeQualityControlState(){
-    if (QualityCOntrolOn){
-        QualityCOntrolOn = false;
-    }else{
-        QualityCOntrolOn = true;
-    }
+    QualityCOntrolOn = !QualityCOntrolOn;
 }
 
 // Check if any box is out of bounds, and delete it if so
@@ -161,12 +157,13 @@ function createNewBox() {
                 boxCentre.push(boxMiddle);
                 boxTopPortion.push(boxTopFlap);
                 boxBottomPortion.push(boxBottomFlap);
-
                 drawBoxes(boxCentre, boxTopPortion, boxBottomPortion);
+                break;
 
             case "3_Point":
                 //createBox(x, y, width, height, angle, color)
         }
+        
 }
 
 // Change direction of movement
