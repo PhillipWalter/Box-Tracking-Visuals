@@ -57,36 +57,22 @@ function drawBox(box) {
 //TO BE CONTINUED...
 
 // Move all boxes based on the direction
-function moveBoxes() {
-    boxCentre.forEach(box => {
-        if (direction === 'right') {
-            box.x += 3; // Move to the right
-        } else if (direction === 'left') {
-            box.x -= 3; // Move to the left
-        }
-        alterShapeBasedOnPosition(box); // Alter shape as it moves
-    });
+function moveBoxes(...boxArrays) {
 
-    boxTopPortion.forEach(box => {
-        if (direction === 'right') {
-            box.x += 3; // Move to the right
-        } else if (direction === 'left') {
-            box.x -= 3; // Move to the left
-        }
-        alterShapeBasedOnPosition(box); // Alter shape as it moves
-    });
-
-    boxBottomPortion.forEach(box => {
-        if (direction === 'right') {
-            box.x += 3; // Move to the right
-        } else if (direction === 'left') {
-            box.x -= 3; // Move to the left
-        }
-        alterShapeBasedOnPosition(box); // Alter shape as it moves
-    });
-
+    boxArrays.forEach(boxArray => {
+        boxArray.forEach(box => alterPosition(box) )
+    })
     checkBoxBounds(); // Check if any box is out of bounds
-    drawBoxes(); // Redraw boxes after moving
+}
+
+function alterPosition(box){
+    if (direction === 'right') {
+        box.x += 3; // Move to the right
+    } else if (direction === 'left') {
+        box.x -= 3; // Move to the left
+    }
+    alterShapeBasedOnPosition(box); // Alter shape as it moves
+    drawBox(box); // Redraw boxes after moving       
 }
 
 // Alter the box shape based on its position
