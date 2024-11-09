@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardboard Boxes with Auto Movement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        canvas {
+            border: 1px solid #000;
+        }
+
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="100"></canvas>
+
+    <div class="controls">
+        <button onclick="createNewBox()">Create New Box</button><br>
+        <button onclick="changeDirection('left')">Move Left</button>
+        <button onclick="changeDirection('right')">Move Right</button><br>
+        <button onclick="changeQualityControlState()">Toggle Quality Monitoring</button><br>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
