@@ -10,9 +10,17 @@ let direction = 'right'; // Direction of movement, default is right
 let moveInterval = null; // Store the interval reference for movement
 let triggerPosition = canvas.width / 2;
 let QualityCOntrolOn = false;
-let boxType = "4_Corner";
+let boxType = "3_Point";
 
 let canvasWidthModifier = 200;
+
+function changeBoxType(){
+    if (boxType === "3_Point"){
+        boxType = "4_Corner";
+    }else{
+        boxType = "3_Point";
+    }
+}
 
 // Box factory function to create new box parts
 function createBoxPart(x, y, width, height, angle, color, verticalMorph, horizontalMorph) {
@@ -38,7 +46,7 @@ function drawBoxParts() {
         alterPosition(box); // Move the part
         box.horizontalMorph ? alterHorizontalShapeBasedOnPosition(box) : null; // Alter shape as it moves
         box.verticalMorph ? alterVerticalShapeBasedOnPosition(box)  : null;
-        box.verticalMorph ? alterVerticalShapeBasedOnPositionFinal(box) : null;
+        box.verticalMorph ? alterVerticalShapeBasedOnPositionFinalFold(box) : null;
 
         if (!checkBoxBounds(box)) {
             removeBoxFromArray(box); // Remove the box part if it's out of bounds
@@ -70,7 +78,6 @@ function alterPosition(box) {
 // Alter the box shape based on its position
 function alterVerticalShapeBasedOnPosition(box) {
     if (direction === "right"){
-
         if(box.x > triggerPosition - triggerPosition/3){
             box.width = boxBase;
             box.color = checkQualityControlStatus(box);
@@ -84,9 +91,8 @@ function alterVerticalShapeBasedOnPosition(box) {
 };
 
 // Alter the box shape based on its position
-function alterVerticalShapeBasedOnPositionFinal(box) {
+function alterVerticalShapeBasedOnPositionFinalFold(box) {
     if (direction === "right"){
-
         if(box.x > triggerPosition + triggerPosition/2  ){
             box.width = 0;
         }
@@ -136,7 +142,7 @@ function createNewBox() {
     switch (boxType) {
         case "4_Corner":
             
-            let boxMiddle = createBoxPart(
+            let boxMiddle_4Corner = createBoxPart(
                 direction === "right" ? canvas.width - canvas.width : canvas.width,
                 canvas.height / 2,
                 canvas.height / 3,
@@ -147,33 +153,33 @@ function createNewBox() {
                 false
             );
 //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
-            let boxTopFlap = createBoxPart(
-                boxMiddle.x,
+            let boxTopFlap_4Corner = createBoxPart(
+                boxMiddle_4Corner.x,
                 canvas.height / 3.5,
-                boxMiddle.width + boxMiddle.width*0.66,
-                boxMiddle.height / 4,
+                boxMiddle_4Corner.width + boxMiddle_4Corner.width*0.66,
+                boxMiddle_4Corner.height / 4,
                 0,
                 '#C4A77D',
                 true,
                 false
             );
 
-            let boxBottomFlap = createBoxPart(
-                boxMiddle.x,
+            let boxBottomFlap_4Corner = createBoxPart(
+                boxMiddle_4Corner.x,
                 canvas.height - canvas.height / 3.5,
-                boxMiddle.width + boxMiddle.width*0.66 ,
-                boxMiddle.height / 4,
+                boxMiddle_4Corner.width + boxMiddle_4Corner.width*0.66 ,
+                boxMiddle_4Corner.height / 4,
                 0,
                 '#C4A77D',
                 true,
                 false
             );
             //x-position, y-position, width, height, angle, color
-            let boxLeadingFlap = createBoxPart(
-                boxMiddle.x + boxMiddle.width*0.68,
+            let boxLeadingFlap_4Corner = createBoxPart(
+                boxMiddle_4Corner.x + boxMiddle_4Corner.width*0.68,
                 canvas.height/2,
-                boxMiddle.width * 0.3,
-                boxMiddle.height,
+                boxMiddle_4Corner.width * 0.3,
+                boxMiddle_4Corner.height,
                 0,
                 '#C4A77D',
                 false,
@@ -181,30 +187,112 @@ function createNewBox() {
             );
 
             //x-position, y-position, width, height, angle, color
-            let boxFollowingFlap = createBoxPart(
-                boxMiddle.x - boxMiddle.width*0.68,
+            let boxFollowingFlap_4Corner = createBoxPart(
+                boxMiddle_4Corner.x - boxMiddle_4Corner.width*0.68,
                 canvas.height/2,
-                boxMiddle.width * 0.3,
-                boxMiddle.height,
+                boxMiddle_4Corner.width * 0.3,
+                boxMiddle_4Corner.height,
                 0,
                 '#C4A77D',
                 false,
                 true
             );
+
             // Add parts to the dynamic array
-            boxParts.push(boxMiddle);
-            boxParts.push(boxTopFlap);
-            boxParts.push(boxBottomFlap);
-            boxParts.push(boxLeadingFlap);
-            boxParts.push(boxFollowingFlap);
+            boxParts.push(boxMiddle_4Corner);
+            boxParts.push(boxTopFlap_4Corner);
+            boxParts.push(boxBottomFlap_4Corner);
+            boxParts.push(boxLeadingFlap_4Corner);
+            boxParts.push(boxFollowingFlap_4Corner);
 
-            boxBase = boxMiddle.width;
-
+            boxBase = boxMiddle_4Corner.width;
             // Initial drawing
             drawBoxParts();
             break;
 
         case "3_Point":
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxMiddle_3Point = createBoxPart(
+                direction === "right" ? canvas.width - canvas.width : canvas.width,
+                canvas.height / 2,
+                canvas.height / 4,
+                canvas.height / 4,
+                0,
+                '#C4A77D',
+                false,
+                false
+            );
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxTopFlap_3Point = createBoxPart(
+                boxMiddle_3Point.x,
+                canvas.height / 3.7,
+                canvas.height / 4,
+                canvas.height / 5,
+                0,
+                '#C4A77D',
+                true,
+                false
+            );
+
+            let boxBottomFlap_3Point = createBoxPart(
+                boxMiddle_3Point.x,
+                canvas.height - canvas.height / 3.48,
+                canvas.height / 4,
+                canvas.height / 6,
+                0,
+                '#C4A77D',
+                true,
+                false
+            );
+
+            //x-position, y-position, width, height, angle, color
+            let boxLeadingFlap_01_3Point = createBoxPart(
+                direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
+                boxMiddle_3Point.y,
+                boxMiddle_3Point.width * 0.6,
+                boxMiddle_3Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+            //x-position, y-position, width, height, angle, color
+            let boxLeadingFlap_02_3Point = createBoxPart(
+                direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
+                boxTopFlap_3Point.y,
+                boxTopFlap_3Point.width * 0.6,
+                boxTopFlap_3Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+            //x-position, y-position, width, height, angle, color
+            let boxLeadingFlap_03_3Point = createBoxPart(
+                direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
+                boxBottomFlap_3Point.y,
+                boxBottomFlap_3Point.width * 0.6,
+                boxBottomFlap_3Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+            // Add parts to the dynamic array
+            boxParts.push(boxMiddle_3Point);
+            boxParts.push(boxTopFlap_3Point);
+            boxParts.push(boxBottomFlap_3Point);
+            boxParts.push(boxLeadingFlap_01_3Point);
+            boxParts.push(boxLeadingFlap_02_3Point);
+            boxParts.push(boxLeadingFlap_03_3Point);
+
+            
+            boxBase = boxMiddle_3Point.width;
+            // Initial drawing
+            drawBoxParts();
             // Logic for 3-point box type can go here
             break;
     }

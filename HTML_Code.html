@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardboard Boxes with Auto Movement</title>
+    <title>Box Motion Animation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,11 +13,12 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #fffffb;
         }
 
         canvas {
             border: 1px solid #000;
+            background-color: #4A4A48;
         }
 
         .controls {
@@ -28,13 +29,14 @@
     </style>
 </head>
 <body>
-    <canvas id="canvas" width="1200" height="150"></canvas>
+    <canvas id="canvas" width="1200" height="200"></canvas>
 
     <div class="controls">
         <button onclick="createNewBox()">Create New Box</button><br>
         <button onclick="changeDirection('left')">Move Left</button>
         <button onclick="changeDirection('right')">Move Right</button><br>
         <button onclick="changeQualityControlState()">Toggle Quality Monitoring</button><br>
+        <button onclick="changeBoxType()">Change Box Type</button><br>
     </div>
 
     <script src="app.js"></script>
