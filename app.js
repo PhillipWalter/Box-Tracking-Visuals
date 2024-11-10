@@ -4,6 +4,8 @@ const ctx = canvas.getContext('2d');
 // Initialize a dynamic array to hold box parts
 let boxParts = [];
 
+let boxBase = 0;
+
 let direction = 'right'; // Direction of movement, default is right
 let moveInterval = null; // Store the interval reference for movement
 let triggerPosition = canvas.width / 2;
@@ -13,7 +15,7 @@ let boxType = "4_Corner";
 let canvasWidthModifier = 200;
 
 // Box factory function to create new box parts
-function createBoxPart(x, y, width, height, angle, color) {
+function createBoxPart(x, y, width, height, angle, color, verticalMorph, horizontalMorph) {
     return {
         x,
         y,
@@ -21,8 +23,8 @@ function createBoxPart(x, y, width, height, angle, color) {
         height,
         angle,
         color,
-        initialWidth: width, // Store the initial width for reference
-        initialHeight: height, // Store the initial height for reference
+        verticalMorph,
+        horizontalMorph
     };
 }
 
@@ -34,6 +36,9 @@ function drawBoxParts() {
     boxParts.forEach(box => {
         drawPart(box); // Draw each part
         alterPosition(box); // Move the part
+        box.horizontalMorph ? alterHorizontalShapeBasedOnPosition(box) : null; // Alter shape as it moves
+        box.verticalMorph ? alterVerticalShapeBasedOnPosition(box)  : null;
+
         if (!checkBoxBounds(box)) {
             removeBoxFromArray(box); // Remove the box part if it's out of bounds
         }
@@ -59,17 +64,25 @@ function alterPosition(box) {
     } else if (direction === 'left') {
         box.x -= 3; // Move to the left
     }
-    alterShapeBasedOnPosition(box); // Alter shape as it moves
 }
 
 // Alter the box shape based on its position
-function alterShapeBasedOnPosition(box) {
-    if (direction === "right" && box.x > triggerPosition) {
-        box.color = checkQualityControlStatus(box);
-    } else if (direction === "left" && box.x < triggerPosition) {
-        box.color = checkQualityControlStatus(box);
-    }
-}
+function alterVerticalShapeBasedOnPosition(box) {
+    if (direction === "right"){
+        box.x > triggerPosition ? box.width = boxBase : null;
+    }else{
+        box.x < triggerPosition ? box.width = boxBase : null;
+    };
+};
+
+// Alter the box shape based on its position
+function alterHorizontalShapeBasedOnPosition(box) {
+    if (direction === "right"){
+        box.x > triggerPosition + triggerPosition/2 ? box.height = 0 : box.height = box.height;
+    }else{
+        box.x < triggerPosition - triggerPosition/2 ? box.height = 0 : box.height = box.height;
+    };
+};
 
 // Check the Quality Control status of the box
 function checkQualityControlStatus(box) {
@@ -107,16 +120,20 @@ function createNewBox() {
                 canvas.height / 3,
                 canvas.height / 3,
                 0,
-                '#C4A77D'
+                '#C4A77D',
+                false,
+                false
             );
-
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxTopFlap = createBoxPart(
                 boxMiddle.x,
                 canvas.height / 3.5,
                 boxMiddle.width + boxMiddle.width*0.66,
                 boxMiddle.height / 4,
                 0,
-                '#C4A77D'
+                '#C4A77D',
+                true,
+                false
             );
 
             let boxBottomFlap = createBoxPart(
@@ -125,7 +142,9 @@ function createNewBox() {
                 boxMiddle.width + boxMiddle.width*0.66 ,
                 boxMiddle.height / 4,
                 0,
-                '#C4A77D'
+                '#C4A77D',
+                true,
+                false
             );
             //x-position, y-position, width, height, angle, color
             let boxLeadingFlap = createBoxPart(
@@ -134,7 +153,9 @@ function createNewBox() {
                 boxMiddle.width * 0.3,
                 boxMiddle.height,
                 0,
-                '#C4A77D'
+                '#C4A77D',
+                false,
+                true
             );
 
             //x-position, y-position, width, height, angle, color
@@ -144,7 +165,9 @@ function createNewBox() {
                 boxMiddle.width * 0.3,
                 boxMiddle.height,
                 0,
-                '#C4A77D'
+                '#C4A77D',
+                false,
+                true
             );
             // Add parts to the dynamic array
             boxParts.push(boxMiddle);
@@ -152,6 +175,8 @@ function createNewBox() {
             boxParts.push(boxBottomFlap);
             boxParts.push(boxLeadingFlap);
             boxParts.push(boxFollowingFlap);
+
+            boxBase = boxMiddle.width;
 
             // Initial drawing
             drawBoxParts();
