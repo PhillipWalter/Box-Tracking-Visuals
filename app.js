@@ -1,180 +1,176 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-// Initialize an empty array to hold multiple boxes
-let boxCentre = [];
-let boxTopPortion = [];
-let boxBottomPortion = [];
-let boxLeadingPosition = [];
-let boxFollowingPosition = [];
+// Initialize a dynamic array to hold box parts
+let boxParts = [];
 
 let direction = 'right'; // Direction of movement, default is right
 let moveInterval = null; // Store the interval reference for movement
-let triggerPosition = canvas.width/2;
-let QualityCOntrolOn = false
+let triggerPosition = canvas.width / 2;
+let QualityCOntrolOn = false;
+let boxType = "4_Corner";
 
-let boxType = "4_Corner"
+let canvasWidthModifier = 200;
 
-//createBox(canvas.width - canvas.width, canvas.height / 2, 100, 100, 0, '#C4A77D');
-// Box factory function to create new boxes
-function createBox(x, y, width, height, angle, color) {
-        return {
-            x,
-            y,
-            width,
-            height,
-            angle,
-            color,
-            initialWidth: width, // Store the initial width for reference
-            initialHeight: height, // Store the initial height for reference
-        };
+// Box factory function to create new box parts
+function createBoxPart(x, y, width, height, angle, color) {
+    return {
+        x,
+        y,
+        width,
+        height,
+        angle,
+        color,
+        initialWidth: width, // Store the initial width for reference
+        initialHeight: height, // Store the initial height for reference
+    };
 }
 
-// Draw all boxes in the boxes array
-function drawBoxes(...boxArrays){
-
+// Function to draw all the box parts
+function drawBoxParts() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas before drawing
-
-        //push data through the pipeline
-        boxArrays.forEach(boxArray => {
-            boxArray.forEach(box => drawBox(box)); // Draw each box in the current array
-        });
+    
+    // Loop through and draw all parts
+    boxParts.forEach(box => {
+        drawPart(box); // Draw each part
+        alterPosition(box); // Move the part
+        if (!checkBoxBounds(box)) {
+            removeBoxFromArray(box); // Remove the box part if it's out of bounds
+        }
+    });
 }
 
-// Helper function to draw a single box
-function drawBox(box) {
+// Helper function to draw a single box part
+function drawPart(box) {
     ctx.save(); // Save the current context state
-
-    ctx.translate(box.x, box.y); // Move to box's position
+    ctx.translate(box.x, box.y); // Move to the box's position
 
     // Draw the box based on its shape and transformation
     ctx.fillStyle = box.color;
     ctx.fillRect(-box.width / 2, -box.height / 2, box.width, box.height);
-
+    
     ctx.restore(); // Restore context to the saved state
 }
 
-//TO BE CONTINUED...
-
-// Move all boxes based on the direction
-function moveBoxes(...boxArrays) {
-
-    boxArrays.forEach(boxArray => {
-        boxArray.forEach(box => alterPosition(box) )
-    })
-    checkBoxBounds(); // Check if any box is out of bounds
-}
-
-function alterPosition(box){
+// Move box parts based on the direction
+function alterPosition(box) {
     if (direction === 'right') {
         box.x += 3; // Move to the right
     } else if (direction === 'left') {
         box.x -= 3; // Move to the left
     }
     alterShapeBasedOnPosition(box); // Alter shape as it moves
-    drawBox(box); // Redraw boxes after moving       
 }
 
 // Alter the box shape based on its position
 function alterShapeBasedOnPosition(box) {
-    // Change the box's shape as it moves across the canvas
-    if (direction == "right"){
-        if (box.x > triggerPosition) {
-            // Flatten the box horizontally
-            box.width = box.initialWidth;
-            box.height = box.initialHeight;
-            box.color = checkQualityControlStatus(box);
-        }
-    }else{
-        if (box.x < triggerPosition) {
-            // Flatten the box horizontally
-            box.width = box.initialWidth;
-            box.height = box.initialHeight;
-            box.color = checkQualityControlStatus(box);
-        }
+    if (direction === "right" && box.x > triggerPosition) {
+        box.color = checkQualityControlStatus(box);
+    } else if (direction === "left" && box.x < triggerPosition) {
+        box.color = checkQualityControlStatus(box);
     }
 }
 
-function checkQualityControlStatus(box){
+// Check the Quality Control status of the box
+function checkQualityControlStatus(box) {
     return QualityCOntrolOn ? inferQuality(box) : box.color;
 }
 
-function inferQuality(box){
-    if (box.color !== 'red' ){
-        return 'red'
-    }else{
-        return box.color
-    }
+// Infer quality based on color
+function inferQuality(box) {
+    return box.color !== 'red' ? 'red' : box.color;
 }
 
-function changeQualityControlState(){
+// Change the Quality Control state
+function changeQualityControlState() {
     QualityCOntrolOn = !QualityCOntrolOn;
 }
 
-// Check if any box is out of bounds, and delete it if so
-function checkBoxBounds() {
-    boxCentre = boxCentre.filter(box => {
-        return box.x + box.width / 2 > 0 && box.x - box.width / 2 < canvas.width;
-    });
+// Check if a box part is out of bounds and return true/false
+function checkBoxBounds(box) {
+    return box.x + box.width / 2 > -(canvasWidthModifier) && box.x - box.width / 2 < canvas.width + canvasWidthModifier;
+}
 
-    boxTopPortion = boxTopPortion.filter(box => {
-        return box.x + box.width / 2 > 0 && box.x - box.width / 2 < canvas.width;
-    })
-
-    boxBottomPortion = boxBottomPortion.filter(box => {
-        return box.x + box.width / 2 > 0 && box.x - box.width / 2 < canvas.width;
-    })
+// Remove a box part from the dynamic array
+function removeBoxFromArray(box) {
+    boxParts = boxParts.filter(b => b !== box);
 }
 
 // Function to create a new box and add it to the array
 function createNewBox() {
+    switch (boxType) {
+        case "4_Corner":
+            
+            let boxMiddle = createBoxPart(
+                direction === "right" ? canvas.width - canvas.width : canvas.width,
+                canvas.height / 2,
+                canvas.height / 3,
+                canvas.height / 3,
+                0,
+                '#C4A77D'
+            );
 
-        switch (boxType){
+            let boxTopFlap = createBoxPart(
+                boxMiddle.x,
+                canvas.height / 3.5,
+                boxMiddle.width + boxMiddle.width*0.66,
+                boxMiddle.height / 4,
+                0,
+                '#C4A77D'
+            );
 
-            case "4_Corner":
-                //createBox(x, y, width, height, angle, color)
-                    boxMiddle = createBox(  direction == "right" ? canvas.width - canvas.width : canvas.width, 
-                                            canvas.height / 2, 
-                                            canvas.height/3, 
-                                            canvas.height/3, 
-                                            0, 
-                                            '#C4A77D');
+            let boxBottomFlap = createBoxPart(
+                boxMiddle.x,
+                canvas.height - canvas.height / 3.5,
+                boxMiddle.width + boxMiddle.width*0.66 ,
+                boxMiddle.height / 4,
+                0,
+                '#C4A77D'
+            );
+            //x-position, y-position, width, height, angle, color
+            let boxLeadingFlap = createBoxPart(
+                boxMiddle.x + boxMiddle.width*0.68,
+                canvas.height/2,
+                boxMiddle.width * 0.3,
+                boxMiddle.height,
+                0,
+                '#C4A77D'
+            );
 
-                   boxTopFlap = createBox(  boxMiddle.x,                    //x position
-                                            canvas.height/3.5,              //y position
-                                            boxMiddle.width*0.6,            //width
-                                            boxMiddle.height/4,             //height
-                                            0,                              //rotation
-                                            '#C4A77D');                     //color
+            //x-position, y-position, width, height, angle, color
+            let boxFollowingFlap = createBoxPart(
+                boxMiddle.x - boxMiddle.width*0.68,
+                canvas.height/2,
+                boxMiddle.width * 0.3,
+                boxMiddle.height,
+                0,
+                '#C4A77D'
+            );
+            // Add parts to the dynamic array
+            boxParts.push(boxMiddle);
+            boxParts.push(boxTopFlap);
+            boxParts.push(boxBottomFlap);
+            boxParts.push(boxLeadingFlap);
+            boxParts.push(boxFollowingFlap);
 
-                boxBottomFlap = createBox ( boxMiddle.x,
-                                            canvas.height - canvas.height/3.5,
-                                            boxMiddle.width*0.6,
-                                            boxMiddle.height/4,
-                                            0,
-                                            '#C4A77D');
+            // Initial drawing
+            drawBoxParts();
+            break;
 
-                boxCentre.push(boxMiddle);
-                boxTopPortion.push(boxTopFlap);
-                boxBottomPortion.push(boxBottomFlap);
-                drawBoxes(boxCentre, boxTopPortion, boxBottomPortion);
-                break;
-
-            case "3_Point":
-                //createBox(x, y, width, height, angle, color)
-        }
-        
+        case "3_Point":
+            // Logic for 3-point box type can go here
+            break;
+    }
 }
 
-// Change direction of movement
+// Toggle the direction of movement
 function changeDirection(newDirection) {
-    direction = newDirection; // Set the new direction
-    clearInterval(moveInterval); // Clear any existing movement interval
-    moveInterval = setInterval(moveBoxes, 16); // Start moving boxes in the new direction
+    direction = newDirection;
+    if (moveInterval) {
+        clearInterval(moveInterval); // Clear the current movement interval
+    }
+    moveInterval = setInterval(drawBoxParts, 16); // Restart with new direction
 }
 
 // Start moving the boxes automatically to the right when the page loads
-moveInterval = setInterval(moveBoxes, 16); // 60 FPS = 1000ms/60 ≈ 16ms per frame
-
-// Initial call to draw the canvas
-drawBoxes();
+moveInterval = setInterval(drawBoxParts, 16); // 60 FPS = 1000ms/60 ≈ 16ms per frame
