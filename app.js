@@ -69,10 +69,18 @@ function alterPosition(box) {
 // Alter the box shape based on its position
 function alterVerticalShapeBasedOnPosition(box) {
     if (direction === "right"){
-        box.x > triggerPosition ? box.width = boxBase : null;
+
+        if(box.x > triggerPosition){
+            box.width = boxBase;
+            box.color = checkQualityControlStatus(box);
+        }
     }else{
-        box.x < triggerPosition ? box.width = boxBase : null;
+        if(box.x < triggerPosition){
+            box.width = boxBase;
+            box.color = checkQualityControlStatus(box);
+        }
     };
+
 };
 
 // Alter the box shape based on its position
