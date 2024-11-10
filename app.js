@@ -38,6 +38,7 @@ function drawBoxParts() {
         alterPosition(box); // Move the part
         box.horizontalMorph ? alterHorizontalShapeBasedOnPosition(box) : null; // Alter shape as it moves
         box.verticalMorph ? alterVerticalShapeBasedOnPosition(box)  : null;
+        box.verticalMorph ? alterVerticalShapeBasedOnPositionFinal(box) : null;
 
         if (!checkBoxBounds(box)) {
             removeBoxFromArray(box); // Remove the box part if it's out of bounds
@@ -70,25 +71,38 @@ function alterPosition(box) {
 function alterVerticalShapeBasedOnPosition(box) {
     if (direction === "right"){
 
-        if(box.x > triggerPosition){
+        if(box.x > triggerPosition - triggerPosition/3){
             box.width = boxBase;
             box.color = checkQualityControlStatus(box);
         }
     }else{
-        if(box.x < triggerPosition){
+        if(box.x < triggerPosition + triggerPosition/3){
             box.width = boxBase;
             box.color = checkQualityControlStatus(box);
         }
     };
+};
 
+// Alter the box shape based on its position
+function alterVerticalShapeBasedOnPositionFinal(box) {
+    if (direction === "right"){
+
+        if(box.x > triggerPosition + triggerPosition/2  ){
+            box.width = 0;
+        }
+    }else{
+        if(box.x < triggerPosition - triggerPosition/2 ){
+            box.width = 0;
+        }
+    };
 };
 
 // Alter the box shape based on its position
 function alterHorizontalShapeBasedOnPosition(box) {
     if (direction === "right"){
-        box.x > triggerPosition + triggerPosition/2 ? box.height = 0 : box.height = box.height;
+        box.x > triggerPosition ? box.height = 0 : box.height = box.height;
     }else{
-        box.x < triggerPosition - triggerPosition/2 ? box.height = 0 : box.height = box.height;
+        box.x < triggerPosition ? box.height = 0 : box.height = box.height;
     };
 };
 
