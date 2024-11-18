@@ -15,10 +15,20 @@ let boxType = "3_Point";
 let canvasWidthModifier = 200;
 
 function changeBoxType(){
-    if (boxType === "3_Point"){
-        boxType = "4_Corner";
-    }else{
-        boxType = "3_Point";
+
+    switch(boxType){
+        case "3_Point": if (boxType === "3_Point"){
+            boxType = "4_Corner";
+            break;
+        }
+        case "4_Corner": if (boxType === "4_Corner"){
+            boxType = "6_Point";
+            break;
+        }
+        case "6_Point": if (boxType === "6_Point"){
+            boxType = "3_Point"
+            break;
+        }
     }
 }
 
@@ -174,7 +184,7 @@ function createNewBox() {
                 true,
                 false
             );
-            //x-position, y-position, width, height, angle, color
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxLeadingFlap_4Corner = createBoxPart(
                 boxMiddle_4Corner.x + boxMiddle_4Corner.width*0.68,
                 canvas.height/2,
@@ -186,7 +196,7 @@ function createNewBox() {
                 true
             );
 
-            //x-position, y-position, width, height, angle, color
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxFollowingFlap_4Corner = createBoxPart(
                 boxMiddle_4Corner.x - boxMiddle_4Corner.width*0.68,
                 canvas.height/2,
@@ -211,6 +221,7 @@ function createNewBox() {
             break;
 
         case "3_Point":
+
 //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxMiddle_3Point = createBoxPart(
                 direction === "right" ? canvas.width - canvas.width : canvas.width,
@@ -222,6 +233,7 @@ function createNewBox() {
                 false,
                 false
             );
+
 //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxTopFlap_3Point = createBoxPart(
                 boxMiddle_3Point.x,
@@ -234,6 +246,7 @@ function createNewBox() {
                 false
             );
 
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxBottomFlap_3Point = createBoxPart(
                 boxMiddle_3Point.x,
                 canvas.height - canvas.height / 3.48,
@@ -245,7 +258,7 @@ function createNewBox() {
                 false
             );
 
-            //x-position, y-position, width, height, angle, color
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxLeadingFlap_01_3Point = createBoxPart(
                 direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
                 boxMiddle_3Point.y,
@@ -257,7 +270,7 @@ function createNewBox() {
                 true
             );
 
-            //x-position, y-position, width, height, angle, color
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxLeadingFlap_02_3Point = createBoxPart(
                 direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
                 boxTopFlap_3Point.y,
@@ -269,7 +282,7 @@ function createNewBox() {
                 true
             );
 
-            //x-position, y-position, width, height, angle, color
+//              x, y, width, height, angle, color, verticalMorph, horizontalMorph
             let boxLeadingFlap_03_3Point = createBoxPart(
                 direction === "right" ? boxMiddle_3Point.x + boxMiddle_3Point.width*0.82 : boxMiddle_3Point.x - boxMiddle_3Point.width*0.82,
                 boxBottomFlap_3Point.y,
@@ -295,6 +308,134 @@ function createNewBox() {
             drawBoxParts();
             // Logic for 3-point box type can go here
             break;
+
+        case "6_Point":
+
+            //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxMiddle_6Point = createBoxPart(
+                direction === "right" ? canvas.width - canvas.width : canvas.width,
+                canvas.height / 2,
+                canvas.height / 4,
+                canvas.height / 4,
+                0,
+                '#C4A77D',
+                false,
+                false
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxTopFlap_6Point = createBoxPart(
+                boxMiddle_6Point.x,
+                canvas.height / 3.7,
+                canvas.height / 4,
+                canvas.height / 5,
+                0,
+                '#C4A77D',
+                true,
+                false
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxBottomFlap_6Point = createBoxPart(
+                boxMiddle_6Point.x,
+                canvas.height - canvas.height / 3.48,
+                canvas.height / 4,
+                canvas.height / 6,
+                0,
+                '#C4A77D',
+                true,
+                false
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxLeadingFlap_01_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x + boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x - boxMiddle_6Point.width*0.82,
+                boxMiddle_6Point.y,
+                boxMiddle_6Point.width * 0.6,
+                boxMiddle_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxLeadingFlap_02_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x + boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x - boxMiddle_6Point.width*0.82,
+                boxTopFlap_6Point.y,
+                boxTopFlap_6Point.width * 0.6,
+                boxTopFlap_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxLeadingFlap_03_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x + boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x - boxMiddle_6Point.width*0.82,
+                boxBottomFlap_6Point.y,
+                boxBottomFlap_6Point.width * 0.6,
+                boxBottomFlap_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+            //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxFollowingFlap_01_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x - boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x + boxMiddle_6Point.width*0.82,
+                boxMiddle_6Point.y,
+                boxMiddle_6Point.width * 0.6,
+                boxMiddle_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxFollowingFlap_02_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x - boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x + boxMiddle_6Point.width*0.82,
+                boxTopFlap_6Point.y,
+                boxTopFlap_6Point.width * 0.6,
+                boxTopFlap_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+    //              x, y, width, height, angle, color, verticalMorph, horizontalMorph
+            let boxFollowingFlap_03_6Point = createBoxPart(
+                direction === "right" ? boxMiddle_6Point.x - boxMiddle_6Point.width*0.82 : boxMiddle_6Point.x + boxMiddle_6Point.width*0.82,
+                boxBottomFlap_6Point.y,
+                boxBottomFlap_6Point.width * 0.6,
+                boxBottomFlap_6Point.height,
+                0,
+                '#C4A77D',
+                false,
+                true
+            );
+
+            // Add parts to the dynamic array
+            boxParts.push(boxMiddle_6Point);
+            boxParts.push(boxTopFlap_6Point);
+            boxParts.push(boxBottomFlap_6Point);
+            boxParts.push(boxLeadingFlap_01_6Point);
+            boxParts.push(boxLeadingFlap_02_6Point);
+            boxParts.push(boxLeadingFlap_03_6Point);
+            boxParts.push(boxFollowingFlap_01_6Point);
+            boxParts.push(boxFollowingFlap_02_6Point);
+            boxParts.push(boxFollowingFlap_03_6Point);
+
+            
+            boxBase = boxMiddle_6Point.width;
+            // Initial drawing
+            drawBoxParts();
+        // Logic for 3-point box type can go here
+        break;
     }
 }
 
